@@ -21,4 +21,10 @@ public class FlightService {
     public void saveOrUpdate(Flight flight) {
         flightRepository.save(flight);
     }
+
+    public List<Flight> getFlightsWithSeatsAvailable() {
+        List<Flight> flights = new ArrayList<>();
+        flightRepository.findFlightsWithSeatsAvailable().forEach(flight -> flights.add(flight));
+        return flights;
+    }
 }
