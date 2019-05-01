@@ -48,9 +48,10 @@ dependencies {
 
 publishing {
     publications {
-        shadow(MavenPublication) { publication ->
+        maven(MavenPublication) {
             groupId = group
-            project.shadow.component(publication)
+
+            from components.java
         }
     }
     repositories {
