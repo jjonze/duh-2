@@ -15,6 +15,16 @@ public class Flight {
     private String fromAirport;
     private String toAirport;
 
+    public int getSeatsAvailable() {
+        return seatsAvailable;
+    }
+
+    public void setSeatsAvailable(int seatsAvailable) {
+        this.seatsAvailable = seatsAvailable;
+    }
+
+    private int seatsAvailable;
+
     public long getId() {
         return id;
     }
@@ -22,8 +32,6 @@ public class Flight {
     public void setId(long id) {
         this.id = id;
     }
-
-
 
     public String getFromAirport() {
         return fromAirport;
