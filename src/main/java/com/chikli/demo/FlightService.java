@@ -27,4 +27,6 @@ public class FlightService {
         flightRepository.findFlightsWithSeatsAvailable().forEach(flight -> flights.add(flight));
         return flights;
     }
+
+
 }

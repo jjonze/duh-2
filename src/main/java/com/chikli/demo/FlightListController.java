@@ -14,9 +14,14 @@ public class FlightListController {
     @Autowired
     FlightService flightService;
 
-    @GetMapping
+    @GetMapping("/all")
     private List<Flight> getAllFlights() {
         return flightService.getAllFlights();
+    }
+
+    @GetMapping("/available")
+    private List<Flight> getAvailableFlights() {
+        return flightService.getFlightsWithSeatsAvailable();
     }
 
     @PostMapping("/flights")

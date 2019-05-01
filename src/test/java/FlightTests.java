@@ -54,9 +54,20 @@ public class FlightTests {
     public void getFlightsWithSeatsAvailable() {
         ArrayList flights = new ArrayList();
         Flight f1 = new Flight();
+        f1.setSeatsAvailable(10);
         flights.add(f1);
-        when(flightRepository.findAll()).thenReturn(flights);
-        assertThat(flightService.getAllFlights()).isNotEmpty();
+        when(flightRepository.findFlightsWithSeatsAvailable()).thenReturn(flights);
+        List<Flight> availableFlights = flightService.getFlightsWithSeatsAvailable();
+        assertThat(availableFlights).isNotEmpty();
+        assertThat(availableFlights.get(0).getSeatsAvailable()).isGreaterThan(0);
+    }
+
+    @Test
+    public void getFlightsWithNoSeatsAvailable() {
+        ArrayList flights = new ArrayList();
+        when(flightRepository.findFlightsWithSeatsAvailable()).thenReturn(new ArrayList<>());
+        List<Flight> availableFlights = flightService.getFlightsWithSeatsAvailable();
+        assertThat(availableFlights).isEmpty();
     }
 
 }

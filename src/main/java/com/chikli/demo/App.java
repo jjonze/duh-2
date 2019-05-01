@@ -35,11 +35,13 @@ public class App implements CommandLineRunner {
         f1.setFromAirport("PKB");
         f1.setToAirport("CMH");
         f1.setSeatsAvailable(10);
+        f1.setPrice(400.00);
 
         Flight f2 = new Flight();
         f2.setFromAirport("PKB");
         f2.setToAirport("RNO");
         f2.setSeatsAvailable(0);
+        f2.setPrice(1000.00);
 
         flights.add(f1);
         flights.add(f2);
