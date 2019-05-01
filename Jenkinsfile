@@ -20,7 +20,7 @@ pipeline {
         }
         stage('build artifact') {
             steps {
-                sh "./gradlew shadowJar -Pversion=${artifactVersion}"
+                sh "./gradlew build -Pversion=${artifactVersion}"
             }
         }
         stage('deploy') {
