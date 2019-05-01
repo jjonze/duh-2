@@ -21,6 +21,14 @@ public class Booking {
         return id;
     }
 
+    public long getFlightId() {
+        return flightId;
+    }
+
+    public void setFlightId(long flightId) {
+        this.flightId = flightId;
+    }
+
     public void setId(long id) {
         this.id = id;
     }

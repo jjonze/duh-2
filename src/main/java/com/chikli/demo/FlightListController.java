@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.awt.print.Book;
 import java.util.List;
 
 @RestController("/")
@@ -13,6 +14,9 @@ public class FlightListController {
 
     @Autowired
     FlightService flightService;
+
+    @Autowired
+    BookingService bookingService;
 
     @GetMapping("/all")
     private List<Flight> getAllFlights() {
@@ -28,5 +32,16 @@ public class FlightListController {
     private long saveFlight(@RequestBody Flight flight) {
         flightService.saveOrUpdate(flight);
         return flight.getId();
+    }
+
+    @GetMapping("/bookings")
+    private List<Booking> getBookings() {
+        return bookingService.getBookings();
+    }
+
+    @PostMapping("/savebooking")
+    public long saveBooking(@RequestBody Booking booking) {
+        bookingService.saveOrUpdate(booking);
+        return booking.getId();
     }
 }

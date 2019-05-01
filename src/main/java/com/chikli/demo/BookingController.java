@@ -14,6 +14,11 @@ public class BookingController {
     @Autowired
     BookingService bookingService;
 
+    @GetMapping("/test")
+    public String test() {
+        return "Testing";
+    }
+
     @PostMapping("/save")
     public long saveBooking(@RequestBody Booking booking) {
         bookingService.saveOrUpdate(booking);

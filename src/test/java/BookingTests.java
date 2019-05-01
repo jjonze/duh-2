@@ -6,6 +6,11 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.awt.print.Book;
 import java.util.ArrayList;
@@ -16,6 +21,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class BookingTests {
+
+    private MockMvc mockMvc;
 
     @TestConfiguration
     static class BookingServiceImplTestContextConfiguration {
@@ -36,10 +43,11 @@ public class BookingTests {
     BookingService bookingService;
 
     @Autowired
-    BookingController bookingController;
+    FlightListController flightListController;
 
     @Test
-    public void saveBookTest() {
+    public void saveBookTest() throws Exception {
+        mockMvc.perform(get("/savebooking"));
         //bookingController.saveBooking();
     }
 
