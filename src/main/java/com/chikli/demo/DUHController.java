@@ -10,7 +10,7 @@ import java.awt.print.Book;
 import java.util.List;
 
 @RestController("/")
-public class FlightListController {
+public class DUHController {
 
     @Autowired
     FlightService flightService;
