@@ -54,6 +54,7 @@ public class FlightTests {
     public void getFlightsWithSeatsAvailable() {
         ArrayList flights = new ArrayList();
         Flight f1 = new Flight();
+        flights.add(f1);
         when(flightRepository.findAll()).thenReturn(flights);
         assertThat(flightService.getAllFlights()).isNotEmpty();
     }
