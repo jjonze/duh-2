@@ -6,6 +6,7 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import javax.annotation.PostConstruct;
+import java.awt.print.Book;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -78,4 +79,16 @@ public class ReservationCommand {
         return "Flight Booked!\n" + f.toString();
     }
 
+    @ShellMethod(value="list bookings")
+    public void listBookings() {
+        Iterable<Booking> bookings = bookingRepository.findAll();
+        System.out.print("\nFlight Reservations:\n\n");
+        for (Booking booking:bookings) {
+            System.out.print(booking.toString());
+            System.out.print("\n");
+            System.out.print(flightRepository.findById(booking.getFlightId()).get().toString());
+            System.out.print("\n\n*********************\n\n");
+        }
+        System.out.print("Total Bookings: " + ((Collection<?>)bookings).size() + "\n");
+    }
 }

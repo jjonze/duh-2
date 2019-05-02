@@ -143,4 +143,15 @@ public class FlightTests {
         assertEquals("Flight Booked!\n" + f1.toString(), output);
     }
 
+    @Test
+    public void listBookingsTest() {
+        List<Booking> bookings = new ArrayList<Booking>();
+        bookings.add(new Booking(1, "Brad"));
+        when(bookingRepository.findAll()).thenReturn(bookings);
+        when(flightRepository.findById(1l)).thenReturn(Optional.of(f1));
+        reservationCommand.listBookings();
+        String expected = "\nFlight Reservations:\n\n" + bookings.get(0).toString() + "\n" + f1.toString() + "\n\n*********************\n\nTotal Bookings: 1\n";
+        assertEquals(expected, outContent.toString());
+    }
+
 }

@@ -47,4 +47,12 @@ public class Booking {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append("Booking:\n\n");
+        sb.append("Name: " + this.getName());
+        return sb.toString();
+    }
 }
