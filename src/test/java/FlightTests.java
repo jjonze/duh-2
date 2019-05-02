@@ -1,6 +1,9 @@
 import com.chikli.demo.Flight;
 import com.chikli.demo.FlightRepository;
 import com.chikli.demo.FlightService;
+import com.chikli.demo.ReservationCommand;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +12,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
@@ -25,6 +31,9 @@ public class FlightTests {
         public FlightService flightService() {
             return new FlightService();
         }
+
+        @Bean
+        public ReservationCommand reservationCommand() { return new ReservationCommand(); }
     }
 
     @MockBean
@@ -33,7 +42,23 @@ public class FlightTests {
     @Autowired
     FlightService flightService;
 
+    @Autowired
+    ReservationCommand reservationCommand;
+
     private List<Flight> flights = new ArrayList<>();
+
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
+
+    @Before
+    public void setUpStreams() {
+        System.setOut(new PrintStream(outContent));
+    }
+
+    @After
+    public void restoreStreams() {
+        System.setOut(originalOut);
+    }
 
     @Test
     public void getFlightsNotNull() {
@@ -67,6 +92,14 @@ public class FlightTests {
         when(flightRepository.findFlightsWithSeatsAvailable()).thenReturn(new ArrayList<>());
         List<Flight> availableFlights = flightService.getFlightsWithSeatsAvailable();
         assertThat(availableFlights).isEmpty();
+    }
+
+    @Test
+    public void addFlightTest() {
+        Flight f = new Flight("PKB", "CMH", 400.00, "2019-05-02 15:00", "2019-05-02 18:00");
+        when(flightRepository.save(f)).thenReturn(f);
+        String output = reservationCommand.addFlight("PKB", "CMH", 400.00, "2019-05-02 15:00", "2019-05-02 18:00");
+        assertEquals("Flight added!\n" + f.toString(), output);
     }
 
 }
