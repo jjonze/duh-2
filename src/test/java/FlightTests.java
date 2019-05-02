@@ -102,4 +102,15 @@ public class FlightTests {
         assertEquals("Flight added!\n" + f.toString(), output);
     }
 
+    Flight f1 = new Flight("PKB", "CMH", 400.00, "2005-05-02 13:00", "2005-05-02 16:00");
+    @Test
+    public void findFlight() {
+        List<Flight> flights = new ArrayList<Flight>();
+        flights.add(f1);
+        when(flightRepository.findFlightByAiport("PKB", "")).thenReturn(flights);
+        String output = reservationCommand.findFlight("PKB", "");
+        String expectedOut = "\nFlight Details:\n\nPKB -> CMH - Price: 400.0\nDeparture Date/Time: 2005-05-02 01:00 PM\nArrival Date/Time: 2005-05-02 04:00 PM\r\n\n*********************\r\n\nFlights Found: 1\r\n";
+        assertEquals(expectedOut, outContent.toString());
+    }
+
 }

@@ -69,9 +69,4 @@ public class ReservationCommand {
         return "Flight added!\n" + f.toString();
     }
 
-    @ShellMethod(value="test")
-    public String test(String input) {
-        System.out.println(input);
-        return "";
-    }
 }
