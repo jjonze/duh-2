@@ -28,16 +28,13 @@ public class ReservationCommand {
     }
 
     @ShellMethod(value = "list all flights")
-    public String listFlights() throws ExecutionException, InterruptedException {
-        System.out.println();
-        System.out.println("Available Flights:");
-        System.out.println();
+    public String listFlights() {
+        System.out.print("\nAvailable Flights:\n");
         Iterable<Flight> flights = flightRepository.findAll();
         for (Flight flight : flights) {
-            System.out.println(flight.getId() + ": " + flight.getFromAirport() + " > " + flight.getToAirport());
+            System.out.print(flight.getId() + ": " + flight.getFromAirport() + " > " + flight.getToAirport() + "\n");
         }
-        System.out.println();
-        System.out.println("Total Flights: " + ((Collection<?>) flights).size());
+        System.out.print("\nTotal Flights: " + ((Collection<?>) flights).size() + "\n");
 
         return "";
     }

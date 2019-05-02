@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -104,13 +105,31 @@ public class FlightTests {
 
     Flight f1 = new Flight("PKB", "CMH", 400.00, "2005-05-02 13:00", "2005-05-02 16:00");
     @Test
-    public void findFlight() {
+    public void findFlightTest() {
         List<Flight> flights = new ArrayList<Flight>();
         flights.add(f1);
         when(flightRepository.findFlightByAiport("PKB", "")).thenReturn(flights);
         String output = reservationCommand.findFlight("PKB", "");
         String expectedOut = "\nFlight Details:\n\nPKB -> CMH - Price: 400.0\nDeparture Date/Time: 2005-05-02 01:00 PM\nArrival Date/Time: 2005-05-02 04:00 PM\r\n\n*********************\r\n\nFlights Found: 1\r\n";
         assertEquals(expectedOut, outContent.toString());
+    }
+
+    @Test
+    public void getFlightDetailsTest() {
+        when(flightRepository.findById(1l)).thenReturn(Optional.of(f1));
+        String output = reservationCommand.getFlightDetails(1);
+        String expectedOut = f1.toString();
+        assertEquals(expectedOut, output);
+    }
+
+    @Test
+    public void listFlightsTest() {
+        List<Flight> flights = new ArrayList<Flight>();
+        flights.add(f1);
+        when(flightRepository.findAll()).thenReturn(flights);
+        reservationCommand.listFlights();
+        String expected = "\nAvailable Flights:\n" + f1.getId() + ": " + f1.getFromAirport() + " > " + f1.getToAirport() + "\n\nTotal Flights: 1\n";
+        assertEquals(expected, outContent.toString());
     }
 
 }
