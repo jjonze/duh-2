@@ -1,7 +1,4 @@
-import com.chikli.demo.Flight;
-import com.chikli.demo.FlightRepository;
-import com.chikli.demo.FlightService;
-import com.chikli.demo.ReservationCommand;
+import com.chikli.demo.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +36,9 @@ public class FlightTests {
 
     @MockBean
     private FlightRepository flightRepository;
+
+    @MockBean
+    private BookingRepository bookingRepository;
 
     @Autowired
     FlightService flightService;
@@ -103,7 +103,8 @@ public class FlightTests {
         assertEquals("Flight added!\n" + f.toString(), output);
     }
 
-    Flight f1 = new Flight("PKB", "CMH", 400.00, "2005-05-02 13:00", "2005-05-02 16:00");
+    private Flight f1 = new Flight("PKB", "CMH", 400.00, "2005-05-02 13:00", "2005-05-02 16:00");
+
     @Test
     public void findFlightTest() {
         List<Flight> flights = new ArrayList<Flight>();
@@ -130,6 +131,16 @@ public class FlightTests {
         reservationCommand.listFlights();
         String expected = "\nAvailable Flights:\n" + f1.getId() + ": " + f1.getFromAirport() + " > " + f1.getToAirport() + "\n\nTotal Flights: 1\n";
         assertEquals(expected, outContent.toString());
+    }
+
+    @Test
+    public void bookFlightTest() {
+        f1.setId(1);
+        Booking b = new Booking(1, "Brad");
+        when(flightRepository.findById(1l)).thenReturn(Optional.of(f1));
+        when(bookingRepository.save(b)).thenReturn(b);
+        String output = reservationCommand.bookFlight(1, "Brad");
+        assertEquals("Flight Booked!\n" + f1.toString(), output);
     }
 
 }

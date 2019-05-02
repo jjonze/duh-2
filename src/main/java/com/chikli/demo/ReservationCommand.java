@@ -16,6 +16,9 @@ public class ReservationCommand {
     @Autowired
     FlightRepository flightRepository;
 
+    @Autowired
+    BookingRepository bookingRepository;
+
     private boolean dataLoaded = false;
 
     @PostConstruct
@@ -64,6 +67,15 @@ public class ReservationCommand {
         flightRepository.save(f);
 
         return "Flight added!\n" + f.toString();
+    }
+
+    @ShellMethod(value="book flight")
+    public String bookFlight(long flightId, String name) {
+        Booking b = new Booking(flightId, name);
+        Flight f = flightRepository.findById(flightId).get();
+        bookingRepository.save(b);
+
+        return "Flight Booked!\n" + f.toString();
     }
 
 }

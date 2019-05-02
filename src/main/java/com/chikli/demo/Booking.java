@@ -17,6 +17,13 @@ public class Booking {
 
     private String name;
 
+    public Booking() {}
+
+    public Booking(long flightId, String name) {
+        this.flightId = flightId;
+        this.name = name;
+    }
+
     public long getId() {
         return id;
     }
@@ -31,5 +38,13 @@ public class Booking {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
