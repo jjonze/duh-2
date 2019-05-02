@@ -1,52 +1,24 @@
 package com.chikli.demo;
-//test
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-
 @SpringBootApplication
-public class App implements CommandLineRunner {
+public class App {
+
+    private static final Logger log = LoggerFactory.getLogger(App.class);
 
     @Autowired
-    FlightService flightSerivce;
+    FlightRepository flightRepository;
 
     public static void main(String[] args) {
-        SpringApplication.run(App.class, args);
+        System.out.println("Starting DUH Reservation Terminal, please wait...");
+        SpringApplication app = new SpringApplication(App.class);
+        app.setBannerMode(Banner.Mode.OFF);
+        app.run(args);
     }
-
-    @Override
-    @Transactional
-    public void run(String... args) {
-        List<Flight> flights = getBaseData();
-        for (int i = 0; i < flights.size(); i++) {
-            flightSerivce.saveOrUpdate(flights.get(i));
-        }
-    }
-
-    public List<Flight> getBaseData() {
-        List<Flight> flights = new ArrayList<Flight>();
-
-        Flight f1 = new Flight();
-        f1.setFromAirport("PKB");
-        f1.setToAirport("CMH");
-        f1.setSeatsAvailable(10);
-        f1.setPrice(400.00);
-
-        Flight f2 = new Flight();
-        f2.setFromAirport("PKB");
-        f2.setToAirport("RNO");
-        f2.setSeatsAvailable(0);
-        f2.setPrice(1000.00);
-
-        flights.add(f1);
-        flights.add(f2);
-
-        return flights;
-    }
-
 }
