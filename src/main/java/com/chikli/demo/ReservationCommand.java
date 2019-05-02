@@ -54,10 +54,10 @@ public class ReservationCommand {
     public String findFlight(String fromAirport, @ShellOption(defaultValue = "") String toAirport) {
         List<Flight> flights = flightRepository.findFlightByAiport(fromAirport, toAirport);
         for (Flight flight: flights) {
-            System.out.println(flight.toString());
-            System.out.println("\n*********************");
+            System.out.print(flight.toString());
+            System.out.print("\n\n*********************\n");
         }
-        System.out.println("\nFlights Found: " + flights.size());
+        System.out.print("\nFlights Found: " + flights.size() + "\n");
 
         return "";
     }
