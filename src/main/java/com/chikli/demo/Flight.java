@@ -24,7 +24,6 @@ public class Flight {
     private Date arrivalDateTime;
 
     private int seatCount;
-    private int seatsRemaining;
 
     public Flight() { }
 
@@ -32,10 +31,14 @@ public class Flight {
                   String toAirport,
                   double price,
                   String departureDateTime,
-                  String arrivalDateTime) {
+                  String arrivalDateTime,
+                  int seatCount,
+                  int seatsAvailable) {
         this.fromAirport = fromAirport;
         this.toAirport = toAirport;
         this.price = price;
+        this.seatCount = seatCount;
+        this.seatsAvailable = seatsAvailable;
 
         this.setDepartureDateTime(departureDateTime);
         this.setArrivalDateTime(arrivalDateTime);
@@ -115,14 +118,6 @@ public class Flight {
         this.seatCount = seatCount;
     }
 
-    public int getSeatsRemaining() {
-        return seatsRemaining;
-    }
-
-    public void setSeatsRemaining(int seatsRemaining) {
-        this.seatsRemaining = seatsRemaining;
-    }
-
     public Date getDateTime(String date) {
         Date dateTime = null;
         try {
@@ -149,7 +144,6 @@ public class Flight {
         sb.append("\nDeparture Date/Time: ");
         sb.append(this.getDepartureDateTimeString());
         sb.append("\nArrival Date/Time: " + this.getArrivalDateTimeString());
-
         return  sb.toString();
     }
 }

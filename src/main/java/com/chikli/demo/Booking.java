@@ -1,10 +1,7 @@
 //janetta, sharice, amber, amy
 package com.chikli.demo;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Booking {
@@ -16,6 +13,9 @@ public class Booking {
     private long flightId;
 
     private String name;
+
+    @Transient
+    private Flight flight;
 
     public Booking() {}
 
@@ -46,6 +46,14 @@ public class Booking {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Flight getFlight() {
+        return flight;
+    }
+
+    public void setFlight(Flight flight) {
+        this.flight = flight;
     }
 
     @Override

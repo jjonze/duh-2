@@ -31,6 +31,11 @@ public class FlightTests {
         }
 
         @Bean
+        public BookingService bookingService() {
+            return new BookingService();
+        }
+
+        @Bean
         public ReservationCommand reservationCommand() { return new ReservationCommand(); }
     }
 
@@ -42,6 +47,9 @@ public class FlightTests {
 
     @Autowired
     FlightService flightService;
+
+    @Autowired
+    BookingService bookingService;
 
     @Autowired
     ReservationCommand reservationCommand;
@@ -62,48 +70,14 @@ public class FlightTests {
     }
 
     @Test
-    public void getFlightsNotNull() {
-        when(flightRepository.findAll()).thenReturn(new ArrayList());
-        assertThat(flightService.getAllFlights()).isNotNull();
-    }
-
-    @Test
-    public void getFlightsNotEmpty() {
-        ArrayList flights = new ArrayList();
-        flights.add(new Flight());
-        when(flightRepository.findAll()).thenReturn(flights);
-        assertThat(flightService.getAllFlights()).isNotEmpty();
-    }
-
-    @Test
-    public void getFlightsWithSeatsAvailable() {
-        ArrayList flights = new ArrayList();
-        Flight f1 = new Flight();
-        f1.setSeatsAvailable(10);
-        flights.add(f1);
-        when(flightRepository.findFlightsWithSeatsAvailable()).thenReturn(flights);
-        List<Flight> availableFlights = flightService.getFlightsWithSeatsAvailable();
-        assertThat(availableFlights).isNotEmpty();
-        assertThat(availableFlights.get(0).getSeatsAvailable()).isGreaterThan(0);
-    }
-
-    @Test
-    public void getFlightsWithNoSeatsAvailable() {
-        ArrayList flights = new ArrayList();
-        when(flightRepository.findFlightsWithSeatsAvailable()).thenReturn(new ArrayList<>());
-        List<Flight> availableFlights = flightService.getFlightsWithSeatsAvailable();
-        assertThat(availableFlights).isEmpty();
-    }
-
-    @Test
     public void addFlightTest() {
-        Flight f = new Flight("PKB", "CMH", 400.00, "2019-05-02 15:00", "2019-05-02 18:00");
+        Flight f = new Flight("PKB", "CMH", 400.00, "2019-05-02 15:00", "2019-05-02 18:00", 100, 85);
         when(flightRepository.save(f)).thenReturn(f);
-        String output = reservationCommand.addFlight("PKB", "CMH", 400.00, "2019-05-02 15:00", "2019-05-02 18:00");
+        String output = reservationCommand.addFlight("PKB", "CMH", 400.00, "2019-05-02 15:00", "2019-05-02 18:00", 100, 85);
         assertEquals("Flight added!\n" + f.toString(), output);
     }
 
-    private Flight f1 = new Flight("PKB", "CMH", 400.00, "2005-05-02 13:00", "2005-05-02 16:00");
+    private Flight f1 = new Flight("PKB", "CMH", 400.00, "2005-05-02 13:00", "2005-05-02 16:00", 100, 85);
 
     @Test
     public void findFlightTest() {
@@ -127,9 +101,9 @@ public class FlightTests {
     public void listFlightsTest() {
         List<Flight> flights = new ArrayList<Flight>();
         flights.add(f1);
-        when(flightRepository.findAll()).thenReturn(flights);
+        when(flightRepository.findFlightsWithSeatsAvailable()).thenReturn(flights);
         reservationCommand.listFlights();
-        String expected = "\nAvailable Flights:\n" + f1.getId() + ": " + f1.getFromAirport() + " > " + f1.getToAirport() + "\n\nTotal Flights: 1\n";
+        String expected = "\nAvailable Flights:\n\n" + f1.getId() + ": " + f1.getFromAirport() + " > " + f1.getToAirport() + "\nSeats Available: " + f1.getSeatsAvailable() + "\n\nTotal Flights: 1\n";
         assertEquals(expected, outContent.toString());
     }
 
@@ -137,10 +111,23 @@ public class FlightTests {
     public void bookFlightTest() {
         f1.setId(1);
         Booking b = new Booking(1, "Brad");
+        int seatsAvailable = f1.getSeatsAvailable();
         when(flightRepository.findById(1l)).thenReturn(Optional.of(f1));
         when(bookingRepository.save(b)).thenReturn(b);
         String output = reservationCommand.bookFlight(1, "Brad");
         assertEquals("Flight Booked!\n" + f1.toString(), output);
+        assertEquals(f1.getSeatsAvailable(), seatsAvailable-1);
+    }
+
+    @Test
+    public void saveOrUpdateBookingTest() {
+        f1.setId(1);
+        Booking b = new Booking(1, "Brad");
+        int seatsAvailable = f1.getSeatsAvailable();
+        when(flightRepository.findById(1l)).thenReturn(Optional.of(f1));
+        when(bookingRepository.save(b)).thenReturn(b);
+        bookingService.saveOrUpdate(b);
+        assertEquals(f1.getSeatsAvailable(), seatsAvailable-1);
     }
 
     @Test
@@ -152,6 +139,18 @@ public class FlightTests {
         reservationCommand.listBookings();
         String expected = "\nFlight Reservations:\n\n" + bookings.get(0).toString() + "\n" + f1.toString() + "\n\n*********************\n\nTotal Bookings: 1\n";
         assertEquals(expected, outContent.toString());
+    }
+
+    @Test
+    public void departureTimeInvalidTest() {
+        String output = reservationCommand.addFlight("PKB", "CMH", 400.00, "10:00AM", "11:00AM", 85, 85);
+        assertEquals(output, "Invalid Date Format");
+    }
+
+    @Test
+    public void arrivalTimeInvalidTest() {
+        String output = reservationCommand.addFlight("PKB", "CMH", 400.00, "2019-05-02 13:00", "11:00AM", 85, 85);
+        assertEquals(output, "Invalid Date Format");
     }
 
 }

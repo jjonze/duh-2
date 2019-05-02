@@ -13,8 +13,18 @@ public class BookingService {
     @Autowired
     BookingRepository bookingRepository;
 
-    public void saveOrUpdate(Booking booking) {
+    @Autowired
+    FlightRepository flightRepository;
+
+    public Booking saveOrUpdate(Booking booking) {
+
+        Flight f = flightRepository.findById(booking.getFlightId()).get();
         bookingRepository.save(booking);
+        f.setSeatsAvailable(f.getSeatsAvailable() - 1);
+        flightRepository.save(f);
+        booking.setFlight(f);
+
+        return booking;
     }
 
     public List<Booking> getBookings() {
